@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Library App</title>
+</head>
+<body>
+  <nav>
+    <h1>Library App</h1>
+  </nav>
+  <div id="opaque"></div>
+  <div id="container">
+    <div class="books-list" id="book-list"> 
+    </div>
+    <form class="book-form" id="add-book-form" action="javascript: addBookCallback()" autocomplete="off">
+      <label for="title">Title:
+        <input type="text" id="add-title" name="title" required>
+      </label>
+
+      <label for="author">Author:
+        <input type="text" id="add-author" name="author" required>
+      </label>
+
+      <label for="genre">Genre:
+        <input type="text" id="add-genre" name="genre" required>
+      </label>
+
+      <label for="pages">Pages:
+        <input type="number" id="add-pages" name="pages" required>
+      </label>
+
+      Read
+      <label for="read">
+        <input type="radio" id="add-read" name="read-yes-no" value="yes">Yes
+      </label>
+
+      <label for="not-read">
+        <input type="radio" id="add-not-read" name="read-yes-no" value="no">No
+      </label>
+
+      <label for="add">
+        <input type="submit" id="addform-btn" name="add" value="add">
+      </label>
+
+      <label for="cancel">
+        <input type="button" id="add-cancel-btn" name="cancel" onclick="closeAddBookForm()" value="Cancel">
+      </label>
+    </form>
+    <form class="book-form" id="edit-book-form" autocomplete="off" action="javascript: editBook()">
+
+      <div id="identification">identification</div>
+
+      <label for="title">Title:
+        <input type="text" id="edit-title" name="title" required>
+      </label>
+
+      <label for="author">Author:
+        <input type="text" id="edit-author" name="author" required>
+      </label>
+
+      <label for="genre">Genre:
+        <input type="text" id="edit-genre" name="genre" required>
+      </label>
+
+      <label for="pages">Pages:
+        <input type="number" id="edit-pages" name="pages" required>
+      </label>
+
+      Read
+      <label for="read">
+        <input type="radio" id="edit-read" name="read-yes-no" value="yes">Yes
+      </label>
+
+      <label for="not-read">
+        <input type="radio" id="edit-not-read" name="read-yes-no" value="no">No
+      </label>
+
+      <label for="edit">
+        <input type="submit" id="editform-btn" name="edit" value="edit">
+      </label>
+
+      <label for="cancel">
+        <input type="button" id="edit-cancel-btn" name="cancel" onclick="closeEditBookForm()" value="Cancel">
+      </label>
+    </form>
+    <div id="info-bar">
+      <h2>Library Info</h2>
+      <p id="books-number">Number of Books:</p>
+      <p id="books-read">Books read:</p>
+      <button class="add-book-btn" id="add-book-btn">ADD</button>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+<footer>
+
+</footer>
+</html>
