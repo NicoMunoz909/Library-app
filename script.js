@@ -1,38 +1,42 @@
 let myLibrary = [];
 
-function Book(title,author,genre,pages,read) {
+function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg") {
   this.title = title,
   this.author = author,
-  this.genre = genre,
   this.pages = pages,
-  this.read = read
-  this.bookCard = createBookCard(this);
+  this.read = read,
+  this.coverUrl = coverUrl,
+  this.bookCard = createBookCard(this)
 }
 
 function createBookCard(book) {
   const element = document.createElement('div');
   element.classList.add('book-card');
-  element.id = book.title;
-  
+
+  const infoDiv = document.createElement('div');
+  infoDiv.id = 'book-info';
+
+  const imgDiv = document.createElement('div');
+  imgDiv.id = 'img-container';
+  const cover = document.createElement('img');
+  cover.src = book.coverUrl;
+  imgDiv.appendChild(cover);
+  element.appendChild(imgDiv)
+
   const title = document.createElement('h2');
   title.textContent = book.title;
   title.id = 'title';
-  element.appendChild(title);
+  infoDiv.appendChild(title);
 
   const author = document.createElement('p');
   author.textContent = book.author;
   author.id = 'author';
-  element.appendChild(author);
-
-  const genre = document.createElement('p');
-  genre.textContent = book.genre;
-  genre.id = 'genre';
-  element.appendChild(genre);
+  infoDiv.appendChild(author);
 
   const pages = document.createElement('p');
-  pages.textContent = "Pages: "+book.pages;
+  pages.textContent = book.pages+" pages";
   pages.id = 'pages';
-  element.appendChild(pages);
+  infoDiv.appendChild(pages);
 
   const read = document.createElement('p');
   if (book.read) {
@@ -41,23 +45,38 @@ function createBookCard(book) {
     read.textContent = "Not Read"
   }
   read.id = 'read'
-  element.appendChild(read);
+  infoDiv.appendChild(read);
 
-  const delete_btn = document.createElement("button")
-  delete_btn.textContent = "Delete"
-  delete_btn.addEventListener("click",deleteBook.bind(book))
-  element.appendChild(delete_btn)
+  
 
-  const edit_btn = document.createElement("button")
-  edit_btn.textContent = "Edit"
-  edit_btn.addEventListener("click",openEditBookForm.bind(book))
-  element.appendChild(edit_btn)
+  const buttonsDiv = document.createElement('div');
 
+  const delete_btn = document.createElement("button");
+  delete_btn.addEventListener("click",deleteBook.bind(book));
+  delete_btn.id = 'delete-btn';
+  const delete_icon = document.createElement('i');
+  delete_icon.classList.add('fas');
+  delete_icon.classList.add('fa-trash');
+  delete_btn.appendChild(delete_icon);
+  buttonsDiv.appendChild(delete_btn);
+
+  const edit_btn = document.createElement("button");
+  edit_btn.addEventListener("click",openEditBookForm.bind(book));
+  edit_btn.id = 'edit-btn';
+  const edit_icon = document.createElement('i');
+  edit_icon.classList.add('fas');
+  edit_icon.classList.add('fa-edit');
+  edit_btn.appendChild(edit_icon);
+  buttonsDiv.appendChild(edit_btn);
+
+  buttonsDiv.classList.add('card-buttons')
+  infoDiv.appendChild(buttonsDiv);
+  element.appendChild(infoDiv);
   return element
 }
 
-function addBookToLibrary(title,author,genre,pages,read) {
-  myLibrary.push(new Book(title,author,genre,pages,read))
+function addBookToLibrary(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg" ) {
+  myLibrary.push(new Book(title,author,pages,read,coverUrl))
 }
 
 function updateLibraryInfo() {
@@ -113,17 +132,16 @@ function closeAddBookForm() {
 function addBookCallback() {
   const title = document.getElementById('add-title').value
   const author = document.getElementById('add-author').value
-  const genre = document.getElementById('add-genre').value
   const pages = document.getElementById('add-pages').value
   const read = document.getElementById('add-read').checked
   if (read) {
-    addBookToLibrary(title,author,genre,pages,true)
+    addBookToLibrary(title,author,pages,true)
   } else {
-    addBookToLibrary(title,author,genre,pages,false)
+    addBookToLibrary(title,author,pages,false)
   }
   updateLibraryInfo();
   closeAddBookForm();
-  insertBook(myLibrary[myLibrary.length-1]);
+  insertBookCard(myLibrary[myLibrary.length-1]);
 }
 
 function openEditBookForm() {
@@ -138,8 +156,6 @@ function openEditBookForm() {
   title.value = book.title;
   const author = document.getElementById('edit-author');
   author.value = book.author;
-  const genre = document.getElementById('edit-genre');
-  genre.value = book.genre;
   const pages = document.getElementById('edit-pages');
   pages.value = book.pages;
   const read = book.read;
@@ -171,19 +187,15 @@ function editBookCallback() {
   const bookCard = book.bookCard;
   
   const title = document.getElementById('edit-title').value;
-  bookCard.children[0].textContent = title;
+  bookCard.children[1].textContent = title;
   book.title = title;
 
   const author = document.getElementById('edit-author').value;
-  bookCard.children[1].textContent  = author;
+  bookCard.children[2].textContent  = author;
   book.author = author;
 
-  const genre = document.getElementById('edit-genre').value;
-  bookCard.children[2].textContent  = genre;
-  book.genre = genre;
-
   const pages = document.getElementById('edit-pages').value;
-  bookCard.children[3].textContent  = "Pages: "+pages;
+  bookCard.children[3].textContent  = pages + " pages";
   book.pages = parseInt(pages);
 
   if (document.getElementById('edit-read').checked) {
@@ -201,9 +213,9 @@ function editBookCallback() {
 const addBookBtn = document.getElementById("add-book-btn")
 addBookBtn.addEventListener('click',openAddBookForm)
 
-addBookToLibrary("Narnia","Unknown","Fiction",256,true)
-addBookToLibrary("Harry Potter","JK Rowling","Fiction",543,false)
-addBookToLibrary("Harry Potasdater","JK Rowling","Fiction",543,true)
+addBookToLibrary("Narnia","CS Lewis",256,true,"https://images-na.ssl-images-amazon.com/images/I/51WbmTRk-4L._SX331_BO1,204,203,200_.jpg")
+addBookToLibrary("Harry Potter","JK Rowling",543,false,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg")
+addBookToLibrary("Harry Potasdater","JK Rowling",543,true)
 
 showBooks();
 updateLibraryInfo();

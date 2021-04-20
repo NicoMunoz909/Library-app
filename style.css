@@ -1,40 +1,74 @@
-nav {
-  background-color: bisque;
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  top: 0;
-  left: 0;
-  margin: 0px;
-  display: flex;
-  align-items: center;
-  z-index: 300;
+body {
+  height: 100vh;
+  background: rgb(28,34,34);
+  background: linear-gradient(0deg, rgba(28,34,34,1) 0%, rgba(44,38,73,1) 100%);
 }
-nav > h1 {
-  margin-left: 10px;
+h1 {
+  margin: auto;
+  width: fit-content;
 }
 .book-card {
-  border-radius: 5px;
-  border-style: solid;
-  width: 95%;
-  height: 95%;
+  position: relative;
+  border-radius: 25px;
+  background-color: indigo;
+  background-image: linear-gradient(180deg, white 0%, black 50%, grey 100% );
+  background-size: 540px 740px;
+  background-position: -40px -40px;
+  width: 500px;
+  height: 300px;
   text-align: center;
+  overflow: hidden;
+  color: white;
+  display: flex;
+}
+.book-card > #edit-btn {
+  bottom: -10px;
+  right: -10px;
+}
+.book-card > #delete-btn {
+  bottom: -10px;
+  left: -10px;
+}
+.book-card > button {
+  height: 50px;
+  width: 50px;
+}
+.book-card > i {
+  margin: auto;
+}
+#img-container {
+  width: 400px;
+  height: 300px;
+}
+#img-container > img {
+  position: fixed;
+  width: 200px;
+  height: 300px;
+  border-radius: 25px 0px 0px 25px;
+  display: block;
+}
+#book-info {
+  width: 100%;
+}
+.card-buttons {
+  background-color: transparent;
 }
 .books-list {
-  position: absolute;
-  display: grid;
-  width: 70%;
+  margin-top: 100px;
+  display: flex;
+  width: 100%;
   height: 100%;
-  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
-  grid-template-rows: repeat(auto-fill,minmax(200px,1fr));
-  column-gap: 10px;
-  row-gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  column-gap: 15px;
+  row-gap: 30px;
 }
 .book-form {
   display: none;
   background-color: aqua;
-  position: relative;
-  left: 40%;
+  position: fixed;
+  left: 30%;
+  top: 20%;
   border-style: solid;
   opacity: 1;
   text-align: center;
@@ -49,21 +83,26 @@ nav > h1 {
   display: none;
 }
 #container {
-  margin-top: 100px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
 }
-#info-bar {
-  border: solid;
-  position: fixed;
+main {
+  width: 100%;
+}
+#side-bar {
+  border-left: black solid;
   width: 300px;
   height: 100%;
-  right: 0;
 }
-#info-bar > h2 {
+#side-bar > h2 {
   text-align: center;
 }
-#info-bar > p {
+#side-bar > p {
   margin-left: 10px;
 }
 .add-book-btn {
