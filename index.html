@@ -7,76 +7,100 @@
 </head>
 <body>
   <div id="opaque"></div>
-  <form class="book-form" id="add-book-form" action="javascript: addBookCallback()" autocomplete="off">
-      <label for="title">Title:
-        <input type="text" id="add-title" name="title" required>
-      </label>
+  <div class="form-container" id="add-form-container">
+    <form class="book-form" id="add-book-form" action="javascript: addBookCallback()" autocomplete="off">
+        <label for="title">Title:
+          <input type="text" id="add-title" name="title" required>
+        </label>
 
-      <label for="author">Author:
-        <input type="text" id="add-author" name="author" required>
-      </label>
+        <label for="author">Author:
+          <input type="text" id="add-author" name="author" required>
+        </label>
 
-      <label for="pages">Pages:
-        <input type="number" id="add-pages" name="pages" required>
-      </label>
+        <label for="pages">Pages:
+          <input type="number" id="add-pages" name="pages" required>
+        </label>
 
-      <label for="read" class="switchBtn">
-        <input id="add-read" type="checkbox">
-        <div id="add-slide" class="slide round">Not Read</div>
-      </label>
+        <label for="read">
+          <div class="slide-container">
+            <input id="add-read" type="checkbox">
+            <div id="add-slide" class="slide">Not Read</div>
+          </div>
+        </label>
 
-      <label for="add">
-        <input type="submit" id="addform-btn" name="add" value="add">
-      </label>
+        <label for="add">
+          <input type="submit" id="addform-btn" name="add" value="add">
+        </label>
 
-      <label for="cancel">
-        <input type="button" id="add-cancel-btn" name="cancel" onclick="closeAddBookForm()" value="Cancel">
-      </label>
-  </form>
-  <form class="book-form" id="edit-book-form" autocomplete="off" action="javascript: editBookCallback()">
+        <label for="cancel">
+          <input type="button" id="add-cancel-btn" name="cancel" onclick="closeAddBookForm()" value="Cancel">
+        </label>
+    </form>
+  </div>
+  <div class="form-container" id="edit-form-container">
+    <form class="book-form" id="edit-book-form" autocomplete="off" action="javascript: editBookCallback()">
 
-      <div id="identification">identification</div>
+        <h2>Add New Book</h2>
 
-      <label for="title">Title:
-        <input type="text" id="edit-title" name="title" required>
-      </label>
+        <label for="title">Title:
+          <input type="text" id="edit-title" name="title" required>
+        </label>
 
-      <label for="author">Author:
-        <input type="text" id="edit-author" name="author" required>
-      </label>
+        <label for="author">Author:
+          <input type="text" id="edit-author" name="author" required>
+        </label>
 
-      <label for="pages">Pages:
-        <input type="number" id="edit-pages" name="pages" required>
-      </label>
+        <label for="pages">Pages:
+          <input type="number" id="edit-pages" name="pages" required>
+        </label>
 
-      <label for="read" class="switchBtn">
-        <input id="edit-read" type="checkbox">
-        <div id="edit-slide" class="slide round">Read</div>
-      </label>
+        <label for="read">
+          <div class="slide-container">
+            <input id="edit-read" type="checkbox">
+            <div id="edit-slide" class="slide">Not Read</div>
+          </div>
+        </label>
 
-      <label for="edit">
-        <input type="submit" id="editform-btn" name="edit" value="edit">
-      </label>
+        <label for="edit">
+          <input type="submit" id="editform-btn" name="edit" value="edit">
+        </label>
 
-      <label for="cancel">
-        <input type="button" id="edit-cancel-btn" name="cancel" onclick="closeEditBookForm()" value="Cancel">
-      </label>
-  </form>
-  <div id="container">
-    <main>
-      <div>
-      <h1>My Library</h1>
+        <label for="cancel">
+          <input type="button" id="edit-cancel-btn" name="cancel" onclick="closeEditBookForm()" value="Cancel">
+        </label>
+    </form>
+  </div>
+  <div class="main-container">
+    <header>
+      <div class="title">
+        <img id="icon" src="icon.jpeg">
+        <h1>My Library</h1>
       </div>
-      <div class="books-list" id="book-list">
+      <div class="library-log">
+        <h2>Library Info</h2>
+        <p id="books-number">Total Books:</p>
+        <p id="books-read">Read:</p>
+        <p id="books-not-read">Not read:</p>
       </div>
-    </main>
-    
-    <div id="side-bar">
-      <h2>Library Info</h2>
-      <p id="books-number">Number of Books:</p>
-      <p id="books-read">Books read:</p>
-      <button class="add-book-btn" id="add-book-btn">ADD</button>
+    </header>
+    <div class="library-bar">
+      <label for="order-by">Order by:
+        <select name="order-by">
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+          <option value="pages">Number of Pages</option>
+          <option value="Insertion-date">Insertion Date</option>
+        </select>
+        <select name="order">
+          <option value="desc">Desc</option>
+          <option value="asc">Asc</option>
+        </select>
+      </label>
+      <button id="add-book-btn">
+        <i class="fas fa-plus"></i>
+      </button>
     </div>
+    <div class="book-list" id="book-list"></div>
   </div>
 <script src="script.js"></script>
 </body>

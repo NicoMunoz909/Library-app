@@ -1,129 +1,186 @@
 body {
-  overflow: scroll;
+  font-family: Arial, Helvetica, sans-serif;
 }
-h1 {
+.main-container {
+  max-width: 1530px;
   margin: auto;
-  width: fit-content;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 80px;
+  margin-right: 80px;
+}
+.title {
+  display: flex;
+  align-items: center;
+  line-height: 51.25px;
+}
+.title > h1 {
+  margin-left: 10px;
+  font-size: 70px;
+  font-weight: 500;
+}
+#icon {
+  width: 62.5px;
+  height: 51.25px;
+}
+.library-log {
+  border: 1px black solid;
+  border-radius: 3px;
+  width: 300px;
+  line-height: 60%;
+}
+.library-log > h2 {
+  text-align: center;
+}
+.library-log > p {
+  text-align: left;
+  margin-left: 30px;
+}
+.library-bar {
+  display: flex;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #cecdcd 0%, #5d6874 50%, #cecdcd 100%);
+  justify-content: space-between;
+  align-items: center;
+}
+#add-book-btn {
+  height: 30px;
+  width: 30px;
+  border: none;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.book-list {
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px,500px));
+  row-gap: 10px;
+  column-gap: 10px;
 }
 .book-card {
   position: relative;
-  border-radius: 25px;
-  background-color: indigo;
-  background-image: linear-gradient(90deg, white 0%, black 30%, grey 100% );
-  background-size: 540px 740px;
-  background-position: -40px -40px;
-  width: 500px;
+  border-radius: 10px;
+  width: 450px;
   height: 300px;
-  text-align: center;
   overflow: hidden;
-  color: white;
+  color: black;
   display: flex;
-  box-shadow: -1px -1px 10px grey;
 }
-.book-card > #edit-btn {
-  bottom: -10px;
-  right: -10px;
-}
-.book-card > #delete-btn {
-  bottom: -10px;
-  left: -10px;
-}
-#delete-btn, #edit-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  margin: 5px;
-  border: none;
-}
-.book-card > button {
-  height: 50px;
-  width: 50px;
-}
-.book-card > i {
-  margin: auto;
-}
-#img-container {
-  width: 400px;
-  height: 300px;
-}
-#img-container > img {
-  position: absolute;
-  width: 200px;
-  height: 300px;
-  border-radius: 25px 0px 0px 25px;
+.cover-img {
   display: block;
+  height: 300px;
+  width: 200px;
 }
-#book-info {
-  width: 100%;
-}
-#book-info > p, #book-info > h2 {
+.info-div {
   position: relative;
-  top: 50px;
+  background: linear-gradient(135deg, #e3e3e3 0%, #5d6874 100%);
+  max-width: 250px;
+  width: 250px;
+  height: 300px;
+}
+.book-info {
+  text-align: center;
+  margin-top: 60px;
 }
 .card-buttons {
-  background-color: transparent;
-  position: relative;
-  top: 85px;
-  right: 80px;
+  position: absolute;
+  bottom: 10px;
+  left: 30px;
 }
-.books-list {
-  margin-top: 100px;
-  display: flex;
+.card-buttons > button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  margin: 5px;
+  margin-bottom: 0px;
+}
+.read-status {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.read-text {
+  text-align: center;
+  margin-bottom: 5px;
+}
+.slide-container {
+  position: relative;
+  width: 80px;
+  height: 30px;
+}
+.slide-container > input {
   width: 100%;
   height: 100%;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  column-gap: 15px;
-  row-gap: 30px;
+  display: none;
+}
+.slide {
+  position: relative;
+  cursor: pointer;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgb(117, 53, 53) 0%, rgb(207, 35, 35) 100%);
+  border-radius: 50px;
+}
+.slide:before {
+  position: absolute;
+  content: "";
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  transition: 0.4s;
+}
+
+.slide-container > input:checked + .slide {
+  background: linear-gradient(90deg,rgb(76, 177, 76) 0%, green 100%);
+}
+
+.slide-container > input:checked + .slide:before {
+  left: 53px;
+  transition: 0.4s;
+} 
+.form-container {
+  position: absolute;
+  width: 99%;
+  height: 99%;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 .book-form {
+  margin: auto;
   display: none;
-  background-color: aqua;
   position: fixed;
-  left: 30%;
-  top: 20%;
-  border-style: solid;
-  opacity: 1;
-  text-align: center;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  text-align: left;
   width: 400px;
+  border-radius: 5px;
   height: 580px;
   z-index: 200;
 }
-.book-form > label{
-  display: block;
-}
-#identification {
-  display: none;
-}
-#container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  overflow: scroll;
-}
-main {
-  width: 100%;
-}
-#side-bar {
-  border-left: black solid;
-  width: 300px;
-  height: 100%;
-}
-#side-bar > h2 {
+.book-form > h2 {
   text-align: center;
 }
-#side-bar > p {
-  margin-left: 10px;
+.book-form > label, input{
+  display: block;
+  margin: auto;
+  padding: 5px;
+
 }
-.add-book-btn {
-  width: 100px;
-  height: 50px;
-  margin-left: 100px;
+label {
+  width: fit-content;
+  padding: 10px;
 }
+
 #opaque {
   position: fixed;
   top: 0px;
@@ -135,56 +192,29 @@ main {
   background-color: black;
   opacity: 0.6;
 }
-.switchBtn {
-  position: relative;
-  display: inline-block;
-  width: 150px;
-  height: 34px;
-  top: 128px;
-  left: 58px;
-}
-.switchBtn input {display:none;}
-.slide {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  padding: 8px;
-  color: #000;
-}
-.slide:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 118px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-input:checked + .slide {
-  background-color: #8CE196;
-  padding-left: 10px;
-}
-input:focus + .slide {
-  box-shadow: 0 0 1px #01aeed;
-}
-input:checked + .slide:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-  left: -20px;
+
+
+@media (max-width: 720px) {
+  header {
+    flex-direction: column;
+  }
 }
 
-.slide.round {
-  border-radius: 34px;
-}
-.slide.round:before {
-  border-radius: 50%;
+@media (max-width: 500px) {
+  .info-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .book-info {
+    margin-top: 15px;
+  }
+  .read-status {
+    position: relative;
+    left: 0px;
+  }
+  .card-buttons {
+    position: relative;
+    left: 0px;
+  }
 }

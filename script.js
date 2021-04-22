@@ -6,7 +6,7 @@ function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/
   this.pages = pages,
   this.read = read,
   this.coverUrl = coverUrl,
-  this.bookCard = createBookCard(this)
+  this.bookCard = new BookCard(this)
 }
 
 function BookCard(book) {
@@ -15,6 +15,7 @@ function BookCard(book) {
 
   this.coverImg = document.createElement('img');
   this.coverImg.classList.add('cover-img');
+  this.coverImg.src = book.coverUrl;
 
   this.infoDiv = document.createElement('div');
   this.infoDiv.classList.add('info-div');
@@ -40,18 +41,47 @@ function BookCard(book) {
 
   this.editButton = document.createElement('button');
   this.editButton.classList.add('edit-btn');
+  this.editButton.addEventListener('click',openEditBookForm.bind(book))
+
+  this.editIcon = document.createElement('i');
+  this.editIcon.classList.add('fas','fa-edit');
+
+  this.editButton.appendChild(this.editIcon);
 
   this.deleteButton = document.createElement('button');
   this.deleteButton.classList.add('delete-btn');
+  this.deleteButton.addEventListener('click',deleteBook.bind(book))
+
+  this.deleteIcon = document.createElement('i');
+  this.deleteIcon.classList.add('fas', 'fa-trash');
+
+  this.deleteButton.appendChild(this.deleteIcon);
 
   this.buttonsDiv.appendChild(this.editButton);
   this.buttonsDiv.appendChild(this.deleteButton);
+
+  this.readStatus = document.createElement('div');
+  this.readStatus.classList.add('read-status');
+
+  this.readText = document.createElement('p');
+  this.readText.classList.add('read-text')
+  if (book.read) {
+    this.readText.textContent = 'Read';
+  } else {
+    this.readText.textContent = 'Not Read';
+  }
+
 
   this.slideContainer = document.createElement('div');
   this.slideContainer.classList.add('slide-container');
 
   this.input = document.createElement('input')
   this.input.type = 'checkbox';
+  if (book.read) {
+    this.input.checked = true;
+  } else {
+    this.input.checked = false;
+  }
 
   this.slide = document.createElement('div');
   this.slide.classList.add('slide');
@@ -60,91 +90,16 @@ function BookCard(book) {
   this.slideContainer.appendChild(this.input);
   this.slideContainer.appendChild(this.slide);
 
+  this.readStatus.appendChild(this.readText);
+  this.readStatus.appendChild(this.slideContainer);
+
   this.infoDiv.appendChild(this.bookInfo);
   this.infoDiv.appendChild(this.buttonsDiv);
-  this.infoDiv.appendChild(this.slideContainer);
+  this.infoDiv.appendChild(this.readStatus);
 
   this.card.appendChild(this.coverImg);
   this.card.appendChild(this.infoDiv);
 
-  return this.card;
-}
-
-function createBookCard(book) {
-  const element = document.createElement('div');
-  element.classList.add('book-card');
-
-  const infoDiv = document.createElement('div');
-  infoDiv.id = 'book-info';
-
-  const imgDiv = document.createElement('div');
-  imgDiv.id = 'img-container';
-  const cover = document.createElement('img');
-  cover.src = book.coverUrl;
-  imgDiv.appendChild(cover);
-  element.appendChild(imgDiv)
-
-  const title = document.createElement('h2');
-  title.textContent = book.title;
-  title.id = 'title';
-  infoDiv.appendChild(title);
-
-  const author = document.createElement('p');
-  author.textContent = book.author;
-  author.id = 'author';
-  infoDiv.appendChild(author);
-
-  const pages = document.createElement('p');
-  pages.textContent = book.pages+" pages";
-  pages.id = 'pages';
-  infoDiv.appendChild(pages);
-
-  const label = document.createElement('label');
-  label.for = 'read';
-  label.classList.add('switchBtn');
-  const input = document.createElement('input');
-  input.type = 'checkbox';
-  const div = document.createElement('div');
-  div.classList.add('slide');
-  div.classList.add('round');
-  input.addEventListener('click', toggleBookRead.bind(book));
-  if (book.read) {
-    input.checked = true;
-    div.textContent = "Read"
-  } else {
-    input.checked = false;
-    div.textContent = "Not Read"
-  }
-  label.appendChild(input);
-  label.appendChild(div);
-  infoDiv.appendChild(label);
-
-  
-
-  const buttonsDiv = document.createElement('div');
-
-  const delete_btn = document.createElement("button");
-  delete_btn.addEventListener("click",deleteBook.bind(book));
-  delete_btn.id = 'delete-btn';
-  const delete_icon = document.createElement('i');
-  delete_icon.classList.add('fas');
-  delete_icon.classList.add('fa-trash');
-  delete_btn.appendChild(delete_icon);
-  buttonsDiv.appendChild(delete_btn);
-
-  const edit_btn = document.createElement("button");
-  edit_btn.addEventListener("click",openEditBookForm.bind(book));
-  edit_btn.id = 'edit-btn';
-  const edit_icon = document.createElement('i');
-  edit_icon.classList.add('fas');
-  edit_icon.classList.add('fa-edit');
-  edit_btn.appendChild(edit_icon);
-  buttonsDiv.appendChild(edit_btn);
-
-  buttonsDiv.classList.add('card-buttons')
-  infoDiv.appendChild(buttonsDiv);
-  element.appendChild(infoDiv);
-  return element
 }
 
 function addBookToLibrary(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg" ) {
@@ -155,6 +110,7 @@ function updateLibraryInfo() {
   const booksNumber = document.getElementById('books-number');
   booksNumber.textContent = 'Number of Books: ' + myLibrary.length
   const booksRead = document.getElementById('books-read');
+  const booksNotRead = document.getElementById('books-not-read');
   const reads = myLibrary.reduce((read,book) => {
     if (book.read) {
       read++;
@@ -163,7 +119,8 @@ function updateLibraryInfo() {
       return read;
     }
   },0)
-  booksRead.textContent = 'Books read: '+reads;
+  booksRead.textContent = 'Read: '+reads;
+  booksNotRead.textContent = `Not read: ${myLibrary.length - reads}` 
 }
 
 function showBooks() {
@@ -172,13 +129,13 @@ function showBooks() {
 
 function insertBookCard(book) {
   const container = document.getElementById("book-list");
-  container.appendChild(book.bookCard);
+  container.appendChild(book.bookCard.card);
 }
 
 function deleteBook() {
   myLibrary.splice(myLibrary.indexOf(this),1)
   const bookList = document.getElementById("book-list")
-  bookList.removeChild(this.bookCard)
+  bookList.removeChild(this.bookCard.card)
   updateLibraryInfo();
 }
 
@@ -186,6 +143,8 @@ function deleteBook() {
 function openAddBookForm() {
   const form = document.getElementById("add-book-form");
   const opaque = document.getElementById('opaque')
+  const formContainer = document.getElementById('add-form-container');
+  formContainer.style.display = "flex";
   opaque.style.display = "block"
   form.reset();
   form.style.opacity = 1
@@ -194,7 +153,9 @@ function openAddBookForm() {
 
 function closeAddBookForm() {
   const form = document.getElementById("add-book-form");
-  const opaque = document.getElementById('opaque')
+  const opaque = document.getElementById('opaque');
+  const formContainer = document.getElementById('add-form-container');
+  formContainer.style.display = "none";
   opaque.style.display = "none"
   form.reset();
   form.style.opacity = 0
@@ -220,10 +181,8 @@ function openEditBookForm() {
   const form = document.getElementById("edit-book-form");
   form.reset();
   const opaque = document.getElementById('opaque')
-  opaque.style.display = "block"
+  opaque.style.display = "flex"
   let book = this;
-  const id = document.getElementById('identification');
-  id.textContent = book.title;
   const title = document.getElementById('edit-title');
   title.value = book.title;
   const author = document.getElementById('edit-author');
@@ -242,12 +201,15 @@ function openEditBookForm() {
   editButton.dataset.bookIndex = myLibrary.indexOf(this);
   form.style.opacity = 1
   form.style.display = "block"
-  
+  const formContainer = document.getElementById('edit-form-container');
+  formContainer.style.display = "flex";
 }
 
 function closeEditBookForm() {
   const form = document.getElementById("edit-book-form");
   const opaque = document.getElementById('opaque')
+  const formContainer = document.getElementById('edit-form-container');
+  formContainer.style.display = "none";
   opaque.style.display = "none"
   form.reset();
   form.style.opacity = 0
@@ -261,24 +223,24 @@ function editBookCallback() {
   const bookCard = book.bookCard;
   
   const title = document.getElementById('edit-title').value;
-  bookCard.children[1].children[0].textContent = title;
+  bookCard.bookTitle.textContent = title;
   book.title = title;
 
   const author = document.getElementById('edit-author').value;
-  bookCard.children[1].children[1].textContent  = author;
+  bookCard.bookAuthor.textContent  = author;
   book.author = author;
 
   const pages = document.getElementById('edit-pages').value;
-  bookCard.children[1].children[2].textContent  = pages + " pages";
+  bookCard.bookPages.textContent  = pages + " pages";
   book.pages = parseInt(pages);
 
   if (document.getElementById('edit-read').checked) {
-    bookCard.children[1].children[3].children[1].textContent  = 'Read';
-    bookCard.children[1].children[3].children[0].checked  = true;
+    bookCard.readText.textContent  = 'Read';
+    bookCard.input.checked  = true;
     book.read = true;
   } else {
-    bookCard.children[1].children[3].children[1].textContent  = 'Not Read';
-    bookCard.children[1].children[3].children[0].checked  = false;
+    bookCard.readText.textContent  = 'Not Read';
+    bookCard.input.checked  = false;
     book.read = false;
   }
   updateLibraryInfo();
@@ -311,14 +273,14 @@ function toggleEditRead() {
 }
 
 function toggleBookRead() {
-  if (this.read) {
-    this.bookCard.children[1].children[3].children[1].textContent  = 'Not Read';
-    this.bookCard.children[1].children[3].children[0].checked  = false;
+  if (this.bookCard.input.checked) {
+    this.bookCard.input.checked = false;
     this.read = false;
+    this.bookCard.readText.textContent = 'Not Read'
   } else {
-    this.bookCard.children[1].children[3].children[1].textContent  = 'Read';
-    this.bookCard.children[1].children[3].children[0].checked  = true;
+    this.bookCard.input.checked = true;
     this.read = true;
+    this.bookCard.readText.textContent = 'Read'
   }
   updateLibraryInfo();
 }
@@ -326,11 +288,11 @@ function toggleBookRead() {
 const addBookBtn = document.getElementById("add-book-btn")
 addBookBtn.addEventListener('click',openAddBookForm)
 
-const addSlide = document.getElementById('add-slide')
+/*const addSlide = document.getElementById('add-slide')
 addSlide.addEventListener('click', toggleAddRead)
 
 const editSlide = document.getElementById('edit-slide')
-editSlide.addEventListener('click', toggleEditRead)
+editSlide.addEventListener('click', toggleEditRead)*/
 
 addBookToLibrary("Narnia","CS Lewis",256,true,"https://images-na.ssl-images-amazon.com/images/I/51WbmTRk-4L._SX331_BO1,204,203,200_.jpg")
 addBookToLibrary("Harry Potter","JK Rowling",543,false,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg")
