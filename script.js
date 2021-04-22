@@ -9,6 +9,67 @@ function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/
   this.bookCard = createBookCard(this)
 }
 
+function BookCard(book) {
+  this.card = document.createElement('div');
+  this.card.classList.add('book-card');
+
+  this.coverImg = document.createElement('img');
+  this.coverImg.classList.add('cover-img');
+
+  this.infoDiv = document.createElement('div');
+  this.infoDiv.classList.add('info-div');
+
+  this.bookInfo = document.createElement('div');
+  this.bookInfo.classList.add('book-info');
+
+  this.bookTitle = document.createElement('h2');
+  this.bookTitle.textContent = book.title;
+
+  this.bookAuthor = document.createElement('p');
+  this.bookAuthor.textContent = book.author;
+
+  this.bookPages = document.createElement('p');
+  this.bookPages.textContent = `${book.pages} pages`;
+
+  this.bookInfo.appendChild(this.bookTitle);
+  this.bookInfo.appendChild(this.bookAuthor);
+  this.bookInfo.appendChild(this.bookPages);
+
+  this.buttonsDiv = document.createElement('div');
+  this.buttonsDiv.classList.add('card-buttons');
+
+  this.editButton = document.createElement('button');
+  this.editButton.classList.add('edit-btn');
+
+  this.deleteButton = document.createElement('button');
+  this.deleteButton.classList.add('delete-btn');
+
+  this.buttonsDiv.appendChild(this.editButton);
+  this.buttonsDiv.appendChild(this.deleteButton);
+
+  this.slideContainer = document.createElement('div');
+  this.slideContainer.classList.add('slide-container');
+
+  this.input = document.createElement('input')
+  this.input.type = 'checkbox';
+
+  this.slide = document.createElement('div');
+  this.slide.classList.add('slide');
+  this.slide.addEventListener('click', toggleBookRead.bind(book));
+
+  this.slideContainer.appendChild(this.input);
+  this.slideContainer.appendChild(this.slide);
+
+  this.infoDiv.appendChild(this.bookInfo);
+  this.infoDiv.appendChild(this.buttonsDiv);
+  this.infoDiv.appendChild(this.slideContainer);
+
+  this.card.appendChild(this.coverImg);
+  this.card.appendChild(this.infoDiv);
+
+  return this.card;
+}
+
 function createBookCard(book) {
   const element = document.createElement('div');
   element.classList.add('book-card');
@@ -38,14 +99,25 @@ function createBookCard(book) {
   pages.id = 'pages';
   infoDiv.appendChild(pages);
 
-  const read = document.createElement('p');
+  const label = document.createElement('label');
+  label.for = 'read';
+  label.classList.add('switchBtn');
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  const div = document.createElement('div');
+  div.classList.add('slide');
+  div.classList.add('round');
+  input.addEventListener('click', toggleBookRead.bind(book));
   if (book.read) {
-    read.textContent = "Read"
+    input.checked = true;
+    div.textContent = "Read"
   } else {
-    read.textContent = "Not Read"
+    input.checked = false;
+    div.textContent = "Not Read"
   }
-  read.id = 'read'
-  infoDiv.appendChild(read);
+  label.appendChild(input);
+  label.appendChild(div);
+  infoDiv.appendChild(label);
 
   
 
@@ -161,8 +233,10 @@ function openEditBookForm() {
   const read = book.read;
   if (read) {
     document.getElementById('edit-read').checked = true;
+    document.getElementById('edit-slide').textContent = 'Read'
   } else {
-    document.getElementById('edit-not-read').checked = true;
+    document.getElementById('edit-read').checked = false;
+    document.getElementById('edit-slide').textContent = 'Not Read'
   }
   const editButton = document.getElementById('editform-btn');
   editButton.dataset.bookIndex = myLibrary.indexOf(this);
@@ -187,22 +261,24 @@ function editBookCallback() {
   const bookCard = book.bookCard;
   
   const title = document.getElementById('edit-title').value;
-  bookCard.children[1].textContent = title;
+  bookCard.children[1].children[0].textContent = title;
   book.title = title;
 
   const author = document.getElementById('edit-author').value;
-  bookCard.children[2].textContent  = author;
+  bookCard.children[1].children[1].textContent  = author;
   book.author = author;
 
   const pages = document.getElementById('edit-pages').value;
-  bookCard.children[3].textContent  = pages + " pages";
+  bookCard.children[1].children[2].textContent  = pages + " pages";
   book.pages = parseInt(pages);
 
   if (document.getElementById('edit-read').checked) {
-    bookCard.children[4].textContent  = 'Read';
+    bookCard.children[1].children[3].children[1].textContent  = 'Read';
+    bookCard.children[1].children[3].children[0].checked  = true;
     book.read = true;
   } else {
-    bookCard.children[4].textContent  = 'Not Read';
+    bookCard.children[1].children[3].children[1].textContent  = 'Not Read';
+    bookCard.children[1].children[3].children[0].checked  = false;
     book.read = false;
   }
   updateLibraryInfo();
@@ -210,8 +286,51 @@ function editBookCallback() {
   
 }
 
+function toggleAddRead() {
+  const checkbox = document.getElementById('add-read');
+  const slide = document.getElementById('add-slide');
+  if (checkbox.checked) {
+    slide.textContent = 'Not Read'
+    checkbox.checked = false;
+  } else {
+    slide.textContent = 'Read'
+    checkbox.checked = true;
+  }
+}
+
+function toggleEditRead() {
+  const checkbox = document.getElementById('edit-read');
+  const slide = document.getElementById('edit-slide')
+  if (checkbox.checked) {
+    slide.textContent = 'Not Read'
+    checkbox.checked = false;
+  } else {
+    slide.textContent = 'Read'
+    checkbox.checked = true;
+  }
+}
+
+function toggleBookRead() {
+  if (this.read) {
+    this.bookCard.children[1].children[3].children[1].textContent  = 'Not Read';
+    this.bookCard.children[1].children[3].children[0].checked  = false;
+    this.read = false;
+  } else {
+    this.bookCard.children[1].children[3].children[1].textContent  = 'Read';
+    this.bookCard.children[1].children[3].children[0].checked  = true;
+    this.read = true;
+  }
+  updateLibraryInfo();
+}
+
 const addBookBtn = document.getElementById("add-book-btn")
 addBookBtn.addEventListener('click',openAddBookForm)
+
+const addSlide = document.getElementById('add-slide')
+addSlide.addEventListener('click', toggleAddRead)
+
+const editSlide = document.getElementById('edit-slide')
+editSlide.addEventListener('click', toggleEditRead)
 
 addBookToLibrary("Narnia","CS Lewis",256,true,"https://images-na.ssl-images-amazon.com/images/I/51WbmTRk-4L._SX331_BO1,204,203,200_.jpg")
 addBookToLibrary("Harry Potter","JK Rowling",543,false,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg")
