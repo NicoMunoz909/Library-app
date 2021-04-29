@@ -1,4 +1,5 @@
 let myLibrary = [];
+let displayedBooks = [];
 
 function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg") {
   this.title = title,
@@ -7,6 +8,7 @@ function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/
   this.read = read,
   this.coverUrl = coverUrl,
   this.bookCard = new BookCard(this)
+  this.insertionDate = Date.now();
 }
 
 function BookCard(book) {
@@ -100,6 +102,8 @@ function BookCard(book) {
   this.card.appendChild(this.coverImg);
   this.card.appendChild(this.infoDiv);
 
+  this.book = book;
+
 }
 
 function addBookToLibrary(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg" ) {
@@ -123,8 +127,10 @@ function updateLibraryInfo() {
   booksNotRead.textContent = `Not read: ${myLibrary.length - reads}` 
 }
 
-function showBooks() {
-  myLibrary.forEach(book => insertBookCard(book))
+function showBooks(array) {
+  displayedBooks = []
+  array.forEach(book => displayedBooks.push(book))
+  array.forEach(book => insertBookCard(book))
 }
 
 function insertBookCard(book) {
@@ -165,7 +171,7 @@ function closeAddBookForm() {
 function addBookCallback() {
   const title = document.getElementById('add-title').value
   const author = document.getElementById('add-author').value
-  const pages = document.getElementById('add-pages').value
+  const pages = parseInt(document.getElementById('add-pages').value)
   const read = document.getElementById('add-read').checked
   if (read) {
     addBookToLibrary(title,author,pages,true)
@@ -174,7 +180,9 @@ function addBookCallback() {
   }
   updateLibraryInfo();
   closeAddBookForm();
-  insertBookCard(myLibrary[myLibrary.length-1]);
+  filterLibrary();
+  sortLibrary();
+  //insertBookCard(myLibrary[myLibrary.length-1]);
 }
 
 function openEditBookForm() {
@@ -285,18 +293,185 @@ function toggleBookRead() {
   updateLibraryInfo();
 }
 
-const addBookBtn = document.getElementById("add-book-btn")
-addBookBtn.addEventListener('click',openAddBookForm)
+function toggleFilterMenu() {
+  const menu = document.getElementById('filter-menu');
+  menu.classList.toggle('show');
+}
 
-/*const addSlide = document.getElementById('add-slide')
-addSlide.addEventListener('click', toggleAddRead)
+function filterCallback() {
+  filterLibrary();
+  showResetFilterButton();
+  toggleFilterMenu();
+}
 
-const editSlide = document.getElementById('edit-slide')
-editSlide.addEventListener('click', toggleEditRead)*/
+function filterLibrary() {
+  const filtered = myLibrary.filter(book => {
+    const title = new RegExp(document.getElementById('filter-title').value, 'i');
+    const author = new RegExp(document.getElementById('filter-author').value, 'i');
+    let minPages = document.getElementById('filter-min-pages').value == "" ? undefined : parseInt(document.getElementById('filter-min-pages').value);
+    let maxPages = document.getElementById('filter-max-pages').value == "" ? undefined : parseInt(document.getElementById('filter-max-pages').value);
+    const read = document.getElementById('filter-read').checked;
+    const notRead = document.getElementById('filter-not-read').checked;
+    let ignoreReadState = undefined;
+    let bookRead = undefined;
+
+    if (minPages == undefined && maxPages == undefined) {
+      minPages = 0;
+      maxPages = Infinity;
+    } else if (minPages == undefined) {
+      minPages = 0;
+    } else if (maxPages == undefined) {
+      maxPages = Infinity;
+    }
+
+    if ( (read && notRead) || (!read && !notRead) ) {
+      ignoreReadState = true;
+    } else if (read) {
+      ignoreReadState = false;
+      bookRead = true;
+    } else {
+      ignoreReadState = false;
+      bookRead = false;
+    }
+
+    if (ignoreReadState) {
+      return title.test(book.title) && author.test(book.author) && book.pages >= minPages && book.pages <= maxPages;
+    } else {
+      return title.test(book.title) && author.test(book.author) && book.pages >= minPages && book.pages <= maxPages && book.read == bookRead;
+    }
+  });
+  wipeBooksList()
+  showBooks(filtered);
+}
+
+function wipeBooksList() {
+  myLibrary.forEach (book => {
+    const bookList = document.getElementById('book-list');
+    if (bookList.contains(book.bookCard.card)) {
+      bookList.removeChild(book.bookCard.card);
+    }
+  })
+}
+
+function clearFilterForm() {
+  const form = document.getElementById('filter-menu');
+  form.reset();
+}
+
+function showResetFilterButton() {
+  const button = document.getElementById('reset-filter-btn');
+  button.style.display = 'block'
+}
+
+function resetFilter() {
+  const button = document.getElementById('reset-filter-btn');
+  button.style.display = 'none'
+  showBooks(myLibrary);
+  sortLibrary();
+}
+
+function sortLibrary() {
+  const sortBy = document.getElementById('sort-by').value;
+  const sortOrder = document.getElementById('sort-order').value;
+  
+  if (sortOrder == 'asc') {
+    switch (sortBy) {
+      case 'title':
+        displayedBooks.sort(function(a,b){
+          if (a.title < b.title) {
+            return -1
+          } else if (a.title > b.title) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+        break;
+        case 'author':
+        displayedBooks.sort(function(a,b){
+          if (a.author < b.author) {
+            return -1
+          } else if (a.author > b.author) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+        break;
+        case 'pages':
+        displayedBooks.sort(function(a,b){return a.pages-b.pages})
+        break;
+        case 'insertion-date':
+        displayedBooks.sort(function(a,b){return a.insertionDate-b.insertionDate})
+        break;
+      default:
+        break;
+    }
+  } else if (sortOrder == 'desc') {
+    switch (sortBy) {
+      case 'title':
+        displayedBooks.sort(function(a,b){
+          if (a.title < b.title) {
+            return 1
+          } else if (a.title > b.title) {
+            return -1
+          } else {
+            return 0
+          }
+        })
+        break;
+        case 'author':
+        displayedBooks.sort(function(a,b){
+          if (a.author < b.author) {
+            return 1
+          } else if (a.author > b.author) {
+            return -1
+          } else {
+            return 0
+          }
+        })
+        break;
+        case 'pages':
+        displayedBooks.sort(function(a,b){return b.pages-a.pages})
+        break;
+        case 'insertion-date':
+        displayedBooks.sort(function(a,b){return b.insertionDate-a.insertionDate})
+        break;
+      default:
+        break;
+    }
+  } 
+
+  showBooks(displayedBooks);
+}
+
+
+const addBookBtn = document.getElementById("add-book-btn");
+addBookBtn.addEventListener('click',openAddBookForm);
+
+const addSlide = document.getElementById('add-slide');
+addSlide.addEventListener('click', toggleAddRead);
+
+const editSlide = document.getElementById('edit-slide');
+editSlide.addEventListener('click', toggleEditRead);
+
+const filterButton = document.getElementById('filter-btn');
+filterButton.addEventListener('click', toggleFilterMenu);
+
+const sortBy = document.getElementById('sort-by');
+const sortOrder = document.getElementById('sort-order');
+sortBy.addEventListener('change', sortLibrary);
+sortOrder.addEventListener('change', sortLibrary);
+
+const resetFilterButton = document.getElementById('reset-filter-btn');
+resetFilterButton.addEventListener('click',resetFilter);
+
+const clearFilterButton = document.getElementById('clear-filter');
+clearFilterButton.addEventListener('click', clearFilterForm)
 
 addBookToLibrary("Narnia","CS Lewis",256,true,"https://images-na.ssl-images-amazon.com/images/I/51WbmTRk-4L._SX331_BO1,204,203,200_.jpg")
 addBookToLibrary("Harry Potter","JK Rowling",543,false,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg")
 addBookToLibrary("Harry Potasdater","JK Rowling",543,true)
 
-showBooks();
+showBooks(myLibrary);
 updateLibraryInfo();

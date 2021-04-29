@@ -9,65 +9,65 @@
   <div id="opaque"></div>
   <div class="form-container" id="add-form-container">
     <form class="book-form" id="add-book-form" action="javascript: addBookCallback()" autocomplete="off">
-        <label for="title">Title:
-          <input type="text" id="add-title" name="title" required>
-        </label>
-
-        <label for="author">Author:
-          <input type="text" id="add-author" name="author" required>
-        </label>
-
-        <label for="pages">Pages:
-          <input type="number" id="add-pages" name="pages" required>
-        </label>
-
-        <label for="read">
-          <div class="slide-container">
-            <input id="add-read" type="checkbox">
-            <div id="add-slide" class="slide">Not Read</div>
-          </div>
-        </label>
-
-        <label for="add">
-          <input type="submit" id="addform-btn" name="add" value="add">
-        </label>
-
-        <label for="cancel">
-          <input type="button" id="add-cancel-btn" name="cancel" onclick="closeAddBookForm()" value="Cancel">
-        </label>
+      <label for="title">Title:
+        <input type="text" id="add-title" name="title" required>
+      </label>
+      
+      <label for="author">Author:
+        <input type="text" id="add-author" name="author" required>
+      </label>
+      
+      <label for="pages">Pages:
+        <input type="number" id="add-pages" name="pages" required>
+      </label>
+      
+      <label for="read">
+        <div class="slide-container">
+          <input id="add-read" type="checkbox">
+          <div id="add-slide" class="slide">Not Read</div>
+        </div>
+      </label>
+      
+      <label for="add">
+        <input type="submit" id="addform-btn" name="add" value="add">
+      </label>
+      
+      <label for="cancel">
+        <input type="button" id="add-cancel-btn" name="cancel" onclick="closeAddBookForm()" value="Cancel">
+      </label>
     </form>
   </div>
   <div class="form-container" id="edit-form-container">
     <form class="book-form" id="edit-book-form" autocomplete="off" action="javascript: editBookCallback()">
-
-        <h2>Add New Book</h2>
-
-        <label for="title">Title:
-          <input type="text" id="edit-title" name="title" required>
-        </label>
-
-        <label for="author">Author:
-          <input type="text" id="edit-author" name="author" required>
-        </label>
-
-        <label for="pages">Pages:
-          <input type="number" id="edit-pages" name="pages" required>
-        </label>
-
-        <label for="read">
-          <div class="slide-container">
-            <input id="edit-read" type="checkbox">
-            <div id="edit-slide" class="slide">Not Read</div>
-          </div>
-        </label>
-
-        <label for="edit">
-          <input type="submit" id="editform-btn" name="edit" value="edit">
-        </label>
-
-        <label for="cancel">
-          <input type="button" id="edit-cancel-btn" name="cancel" onclick="closeEditBookForm()" value="Cancel">
-        </label>
+      
+      <h2>Add New Book</h2>
+      
+      <label for="title">Title:
+        <input type="text" id="edit-title" name="title" required>
+      </label>
+      
+      <label for="author">Author:
+        <input type="text" id="edit-author" name="author" required>
+      </label>
+      
+      <label for="pages">Pages:
+        <input type="number" id="edit-pages" name="pages" required>
+      </label>
+      
+      <label for="read">
+        <div class="slide-container">
+          <input id="edit-read" type="checkbox">
+          <div id="edit-slide" class="slide">Not Read</div>
+        </div>
+      </label>
+      
+      <label for="edit">
+        <input type="submit" id="editform-btn" name="edit" value="edit">
+      </label>
+      
+      <label for="cancel">
+        <input type="button" id="edit-cancel-btn" name="cancel" onclick="closeEditBookForm()" value="Cancel">
+      </label>
     </form>
   </div>
   <div class="main-container">
@@ -83,28 +83,66 @@
         <p id="books-not-read">Not read:</p>
       </div>
     </header>
-    <div class="library-bar">
-      <label for="order-by">Order by:
-        <select name="order-by">
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-          <option value="pages">Number of Pages</option>
-          <option value="Insertion-date">Insertion Date</option>
-        </select>
-        <select name="order">
-          <option value="desc">Desc</option>
-          <option value="asc">Asc</option>
-        </select>
-      </label>
-      <button id="add-book-btn">
+    <div class="library-bar">  
+      <div style="display: flex;">
+        <div id="filter-section">
+          <button id="filter-btn" class="bar-button">
+            <i class="fas fa-sliders-h"></i>
+          </button>
+          <form id="filter-menu" class="dropdown" action="javascript: filterCallback()">
+            <h2>FILTER</h2>
+            <label for="title">Title
+              <input type="text" name="title" id="filter-title">
+            </label>
+            <label for="author">Author
+              <input type="text" name="author" id="filter-author">
+            </label>
+            <label for="pages-number">Pages
+              <input type="number" placeholder="Min." id="filter-min-pages">
+              <input type="number" placeholder="Max." id="filter-max-pages">
+            </label>
+            <label for="read-state">
+              <input type="checkbox" name="read-state" value="read" id="filter-read"> Read
+              <input type="checkbox" name="read-state" value="not-read" id="filter-not-read">Not Read
+            </label>
+            <label for="submit">
+              <input type="submit" value="Filter">
+            </label>
+            <label for="clear">
+              <input type="button" value="Clear" id="clear-filter">
+            </label>
+          </form>
+        </div>
+        <div id="sort-section" style="display: flex; align-items: center;"> 
+          <button id="sort-btn" class="bar-button">
+            <i class="fas fa-sort"></i>
+          </button>
+            <div>
+              <label for="sort-by">
+                <select name="sort-by" id="sort-by">
+                  <option value="insertion-date">Insertion Date</option>
+                  <option value="title">Title</option>
+                  <option value="author">Author</option>
+                  <option value="pages">Number of Pages</option>
+                </select>
+                <select name="order" id="sort-order">
+                  <option value="asc">Asc</option>
+                  <option value="desc">Desc</option>
+                </select>
+              </label>
+            </div>
+        </div>
+      </div>
+      <button id="reset-filter-btn" class="bar-button" style="display: none;">RESET</button>
+      <button id="add-book-btn" class="bar-button">
         <i class="fas fa-plus"></i>
       </button>
     </div>
     <div class="book-list" id="book-list"></div>
   </div>
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 <footer>
-
+  
 </footer>
 </html>

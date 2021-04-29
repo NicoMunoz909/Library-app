@@ -42,16 +42,46 @@ header {
 .library-bar {
   display: flex;
   border-radius: 5px;
-  background: linear-gradient(135deg, #cecdcd 0%, #5d6874 50%, #cecdcd 100%);
+  background: linear-gradient(135deg, #5d6874 0%, #555555 50%, #5d6874 100%);
+  /*background-color: #555555;*/
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
+}
+.bar-button {
+  height: 50px;
+  width: 80px;
+  border: none;
+  background-color: transparent;
+}
+.bar-button:hover {
+  background-color: #000000;
+  transition: 0.5s ease;
+}
+button:focus {
+  outline: none;
+}
+.bar-button > .fas{
+  color: white;
+  font-size: 30px;
 }
 #add-book-btn {
-  height: 30px;
-  width: 30px;
-  border: none;
-  margin-right: 10px;
-  border-radius: 50%;
+  align-self: end;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  margin-top: 5px;
+  border-radius: 10px;
+  height: 0px;
+  width: 0px;
+  z-index: 300;
+  background: linear-gradient(0deg, #5d6874 0%, #555555 50%, #5d6874 100%);
+}
+.show {
+  display: block;
+  height: 400px;
+  width: 300px;
 }
 .book-list {
   margin-top: 100px;
@@ -66,7 +96,7 @@ header {
   width: 450px;
   height: 300px;
   overflow: hidden;
-  color: black;
+  color: white;
   display: flex;
 }
 .cover-img {
@@ -76,7 +106,7 @@ header {
 }
 .info-div {
   position: relative;
-  background: linear-gradient(135deg, #e3e3e3 0%, #5d6874 100%);
+  background: linear-gradient(135deg, #8b97a7 0%, #555555 100%);
   max-width: 250px;
   width: 250px;
   height: 300px;
@@ -192,7 +222,6 @@ label {
   background-color: black;
   opacity: 0.6;
 }
-
 
 @media (max-width: 720px) {
   header {
