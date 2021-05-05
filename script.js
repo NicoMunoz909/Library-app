@@ -1,13 +1,13 @@
 let myLibrary = [];
 let displayedBooks = [];
 
-function Book(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg") {
+function Book(title,author,pages,read,coverUrl) {
   this.title = title,
   this.author = author,
   this.pages = pages,
   this.read = read,
   this.coverUrl = coverUrl,
-  this.bookCard = new BookCard(this)
+  this.bookCard = new BookCard(this),
   this.insertionDate = Date.now();
 }
 
@@ -18,6 +18,7 @@ function BookCard(book) {
   this.coverImg = document.createElement('img');
   this.coverImg.classList.add('cover-img');
   this.coverImg.src = book.coverUrl;
+  this.coverImg.onerror = loadErrorImg;
 
   this.infoDiv = document.createElement('div');
   this.infoDiv.classList.add('info-div');
@@ -102,11 +103,15 @@ function BookCard(book) {
   this.card.appendChild(this.coverImg);
   this.card.appendChild(this.infoDiv);
 
-  this.book = book;
+  //this.book = book;
 
 }
 
-function addBookToLibrary(title,author,pages,read,coverUrl = "https://www.pasionfallera.com/images/no-image.jpg" ) {
+function loadErrorImg() {
+  this.src = "https://www.pasionfallera.com/images/no-image.jpg";
+}
+
+function addBookToLibrary(title,author,pages,read,coverUrl) {
   myLibrary.push(new Book(title,author,pages,read,coverUrl))
 }
 
@@ -169,14 +174,15 @@ function closeAddBookForm() {
 }
 
 function addBookCallback() {
-  const title = document.getElementById('add-title').value
-  const author = document.getElementById('add-author').value
-  const pages = parseInt(document.getElementById('add-pages').value)
-  const read = document.getElementById('add-read').checked
+  const title = document.getElementById('add-title').value;
+  const author = document.getElementById('add-author').value;
+  const pages = parseInt(document.getElementById('add-pages').value);
+  const read = document.getElementById('add-read').checked;
+  const coverUrl = document.getElementById('add-cover-url').value;
   if (read) {
-    addBookToLibrary(title,author,pages,true)
+    addBookToLibrary(title,author,pages,true,coverUrl);
   } else {
-    addBookToLibrary(title,author,pages,false)
+    addBookToLibrary(title,author,pages,false,coverUrl);
   }
   updateLibraryInfo();
   closeAddBookForm();
@@ -197,13 +203,13 @@ function openEditBookForm() {
   author.value = book.author;
   const pages = document.getElementById('edit-pages');
   pages.value = book.pages;
+  const coverUrl = document.getElementById('edit-cover-url');
+  coverUrl.value = book.coverUrl;
   const read = book.read;
   if (read) {
     document.getElementById('edit-read').checked = true;
-    document.getElementById('edit-slide').textContent = 'Read'
   } else {
     document.getElementById('edit-read').checked = false;
-    document.getElementById('edit-slide').textContent = 'Not Read'
   }
   const editButton = document.getElementById('editform-btn');
   editButton.dataset.bookIndex = myLibrary.indexOf(this);
@@ -242,6 +248,10 @@ function editBookCallback() {
   bookCard.bookPages.textContent  = pages + " pages";
   book.pages = parseInt(pages);
 
+  const coverUrl = document.getElementById('edit-cover-url').value;
+  book.coverUrl = coverUrl;
+  book.bookCard.coverImg.src = coverUrl;
+
   if (document.getElementById('edit-read').checked) {
     bookCard.readText.textContent  = 'Read';
     bookCard.input.checked  = true;
@@ -260,10 +270,8 @@ function toggleAddRead() {
   const checkbox = document.getElementById('add-read');
   const slide = document.getElementById('add-slide');
   if (checkbox.checked) {
-    slide.textContent = 'Not Read'
     checkbox.checked = false;
   } else {
-    slide.textContent = 'Read'
     checkbox.checked = true;
   }
 }
@@ -272,10 +280,8 @@ function toggleEditRead() {
   const checkbox = document.getElementById('edit-read');
   const slide = document.getElementById('edit-slide')
   if (checkbox.checked) {
-    slide.textContent = 'Not Read'
     checkbox.checked = false;
   } else {
-    slide.textContent = 'Read'
     checkbox.checked = true;
   }
 }
@@ -364,6 +370,8 @@ function showResetFilterButton() {
 }
 
 function resetFilter() {
+  const form = document.getElementById('filter-menu');
+  form.reset();
   const button = document.getElementById('reset-filter-btn');
   button.style.display = 'none'
   showBooks(myLibrary);
@@ -449,29 +457,27 @@ function sortLibrary() {
 const addBookBtn = document.getElementById("add-book-btn");
 addBookBtn.addEventListener('click',openAddBookForm);
 
-const addSlide = document.getElementById('add-slide');
-addSlide.addEventListener('click', toggleAddRead);
-
-const editSlide = document.getElementById('edit-slide');
-editSlide.addEventListener('click', toggleEditRead);
-
 const filterButton = document.getElementById('filter-btn');
 filterButton.addEventListener('click', toggleFilterMenu);
 
-const sortBy = document.getElementById('sort-by');
-const sortOrder = document.getElementById('sort-order');
-sortBy.addEventListener('change', sortLibrary);
-sortOrder.addEventListener('change', sortLibrary);
+const sortButton = document.getElementById('sort-btn');
+sortButton.addEventListener('click', sortLibrary)
 
 const resetFilterButton = document.getElementById('reset-filter-btn');
 resetFilterButton.addEventListener('click',resetFilter);
 
 const clearFilterButton = document.getElementById('clear-filter');
-clearFilterButton.addEventListener('click', clearFilterForm)
+clearFilterButton.addEventListener('click', clearFilterForm);
 
-addBookToLibrary("Narnia","CS Lewis",256,true,"https://images-na.ssl-images-amazon.com/images/I/51WbmTRk-4L._SX331_BO1,204,203,200_.jpg")
-addBookToLibrary("Harry Potter","JK Rowling",543,false,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg")
-addBookToLibrary("Harry Potasdater","JK Rowling",543,true)
+addBookToLibrary("The Lion, The Witch and The Wardrobe","C.S. Lewis",208,false,"https://upload.wikimedia.org/wikipedia/en/thumb/8/86/TheLionWitchWardrobe%281stEd%29.jpg/220px-TheLionWitchWardrobe%281stEd%29.jpg");
+addBookToLibrary("Harry Potter and The Sorcerer's Stone","J.K. Rowling",309,true,"https://prodimage.images-bn.com/pimages/9780590353427_p0_v2_s550x406.jpg");
+addBookToLibrary("Clean Code","Robert C. Martin",431,true,"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6JrZiH5C4ceF27RqmPRdgHpahu8HI2l8Z1RVYL9OEuP9Bhf8QDhzG5Aq8DkZ9EMu96kE&usqp=CAU")
 
 showBooks(myLibrary);
 updateLibraryInfo();
+
+
+//TODO
+    //REFACTOR CSS
+    //ADD STORAGE(MUST REFACTOR JS)
+    //BASICALLY REFACTOR THE WHOLE PROJECT :)
